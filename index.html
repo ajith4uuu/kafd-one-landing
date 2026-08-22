@@ -43,7 +43,7 @@
   @media(max-width:900px){nav.rail{display:none}}
 
   /* ---------- Laila presenter ---------- */
-  #laila{position:fixed;left:22px;bottom:22px;z-index:50;width:min(330px,calc(100vw - 44px));
+  #laila{position:fixed;left:22px;bottom:22px;z-index:50;width:min(210px,calc(100vw - 44px));
     display:flex;flex-direction:column;border-radius:26px;overflow:hidden;
     background:rgba(13,21,42,.92);border:1px solid var(--line-2);backdrop-filter:blur(16px);
     box-shadow:0 30px 80px rgba(3,6,14,.7);transition:width .35s}
@@ -179,7 +179,9 @@
   .fan .phone:nth-child(3){--ry:16deg}
   @media(max-width:900px){.fan{flex-wrap:wrap;gap:22px}.fan .phone{--ry:0deg}}
   .split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,80px);align-items:center}
-  @media(max-width:940px){.split{grid-template-columns:1fr}}
+  /* Tall chapters: the phone rail rides along while the feature list scrolls */
+  .split > .stage{position:sticky;top:14vh;align-self:start}
+  @media(max-width:940px){.split{grid-template-columns:1fr}.split > .stage{position:static}}
 
   .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:36px}
   .fcard{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:18px;backdrop-filter:blur(12px);
@@ -751,9 +753,9 @@
   const still = document.getElementById('lailaStill');
   const cap = document.getElementById('caption');
   let touring = false, presented = new WeakSet(), voice = null, typeTimer = null;
-  const CLIPS = {}; // index -> 'assets/laila/chN.mp4' if present
-  fetch('assets/laila/manifest.json').then(r => r.ok ? r.json() : []).then(list => {
-    (list || []).forEach(n => { CLIPS[n] = `assets/laila/ch${n}.mp4`; });
+  const CLIPS = {}; // index -> versioned clip path (v2: cache-busts the old set)
+  fetch('assets/laila/manifest.json?v=2').then(r => r.ok ? r.json() : []).then(list => {
+    (list || []).forEach(n => { CLIPS[n] = `assets/laila/v2-ch${n}.mp4`; });
   }).catch(() => {});
 
   const pickVoice = () => {
