@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>KAFD ONE — The District in Your Pocket</title>
-<meta name="description" content="A guided 3D tour of the KAFD ONE superapp — rides, homes, dining, delivery and a verified identity, narrated by your digital concierge." />
+<meta name="description" content="A guided 3D tour of the KAFD ONE superapp above a digital twin of the real district — narrated with lipsync by Laila, your digital concierge, with a compliance-aware chatbot." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,500&family=Alegreya+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet" />
@@ -27,7 +27,6 @@
   a{color:var(--gold);text-decoration:none}
   button{font:inherit;cursor:pointer}
 
-  /* ---------- fixed chrome ---------- */
   #bg3d{position:fixed;inset:0;z-index:0;pointer-events:none}
   .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
     background:radial-gradient(120% 90% at 50% 0%,transparent 55%,rgba(6,10,20,.55) 100%)}
@@ -41,33 +40,54 @@
   nav.rail{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:12px}
   nav.rail a{width:9px;height:9px;border-radius:50%;background:rgba(210,221,244,.28);transition:.3s;display:block}
   nav.rail a.on{background:var(--gold);box-shadow:0 0 12px rgba(237,201,139,.8);transform:scale(1.35)}
-  @media(max-width:760px){nav.rail{display:none}}
+  @media(max-width:900px){nav.rail{display:none}}
 
-  /* ---------- Laila dock ---------- */
-  #laila{position:fixed;left:20px;bottom:20px;z-index:50;display:flex;align-items:flex-end;gap:14px;max-width:min(520px,calc(100vw - 40px))}
-  .orb{position:relative;width:92px;height:92px;flex:0 0 auto;border-radius:50%;padding:3px;
-    background:conic-gradient(from 210deg,var(--gold),rgba(237,201,139,.15),var(--peri),var(--gold));
-    box-shadow:0 14px 40px rgba(4,8,18,.6)}
-  .orb img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 18%}
-  .orb .ring{position:absolute;inset:-7px;border-radius:50%;border:2px solid rgba(237,201,139,.0);transition:.3s}
-  #laila.speaking .ring{border-color:rgba(237,201,139,.55);animation:pulse 1.6s ease-out infinite}
-  @keyframes pulse{0%{transform:scale(.94);opacity:.9}100%{transform:scale(1.16);opacity:0}}
-  .bubble{background:rgba(15,24,48,.92);border:1px solid var(--line);border-radius:18px 18px 18px 6px;
-    padding:12px 16px 10px;backdrop-filter:blur(14px);box-shadow:0 16px 40px rgba(4,8,18,.55);min-width:220px}
-  .bubble .who{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
-  .eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+  /* ---------- Laila presenter ---------- */
+  #laila{position:fixed;left:22px;bottom:22px;z-index:50;width:min(330px,calc(100vw - 44px));
+    display:flex;flex-direction:column;border-radius:26px;overflow:hidden;
+    background:rgba(13,21,42,.92);border:1px solid var(--line-2);backdrop-filter:blur(16px);
+    box-shadow:0 30px 80px rgba(3,6,14,.7);transition:width .35s}
+  #laila.min{width:120px}
+  .stagebox{position:relative;aspect-ratio:9/12;background:#0B1226;overflow:hidden}
+  #laila.min .stagebox{aspect-ratio:1/1}
+  .stagebox video,.stagebox img.still{width:100%;height:100%;object-fit:cover;object-position:50% 12%}
+  .stagebox .halo{position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 0 1px rgba(237,201,139,.0);transition:.3s}
+  #laila.speaking .stagebox .halo{box-shadow:inset 0 0 0 2px rgba(237,201,139,.55),inset 0 -40px 60px rgba(237,201,139,.12)}
+  .stagebox .nameplate{position:absolute;left:12px;bottom:10px;display:flex;align-items:center;gap:8px;
+    background:rgba(10,17,34,.72);border:1px solid var(--line);border-radius:999px;padding:5px 12px;
+    font:700 11.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .eq{display:inline-flex;gap:2px;align-items:flex-end;height:11px}
   .eq i{width:3px;background:var(--gold);border-radius:2px;height:4px}
   #laila.speaking .eq i{animation:eq .7s ease-in-out infinite alternate}
   .eq i:nth-child(2){animation-delay:.12s}.eq i:nth-child(3){animation-delay:.24s}
   .eq i:nth-child(4){animation-delay:.36s}.eq i:nth-child(5){animation-delay:.06s}
-  @keyframes eq{from{height:3px}to{height:12px}}
-  #caption{font-size:15px;line-height:1.5;color:var(--ink);margin-top:4px;min-height:22px;max-height:110px;overflow:hidden}
-  .lctrl{display:flex;gap:8px;margin-top:8px}
+  @keyframes eq{from{height:3px}to{height:11px}}
+  .stagebox .mini{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;
+    background:rgba(10,17,34,.75);border:1px solid var(--line);color:var(--ink-2);font-size:15px;line-height:1}
+  #caption{font-size:14px;line-height:1.5;color:var(--ink);padding:10px 14px 4px;min-height:38px;max-height:96px;overflow:hidden}
+  #laila.min #caption,#laila.min .lctrl,#laila.min #chat{display:none}
+  .lctrl{display:flex;gap:8px;padding:8px 14px 12px;flex-wrap:wrap}
   .lctrl button{background:var(--glass);border:1px solid var(--line);color:var(--ink);border-radius:999px;
-    font-size:12.5px;letter-spacing:.06em;padding:5px 13px;transition:.25s}
+    font-size:12.5px;letter-spacing:.05em;padding:6px 13px;transition:.25s}
   .lctrl button:hover{border-color:var(--gold);color:var(--gold)}
   .lctrl button.primary{background:var(--gold);border-color:var(--gold);color:var(--on-light);font-weight:700}
-  @media(max-width:600px){.orb{width:64px;height:64px}#caption{max-height:76px;font-size:13.5px}}
+
+  /* ---------- chat ---------- */
+  #chat{border-top:1px solid var(--line);display:none;flex-direction:column}
+  #laila.chatting #chat{display:flex}
+  #chatlog{max-height:200px;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+  .msg{max-width:88%;border-radius:14px;padding:8px 12px;font-size:13.5px;line-height:1.5}
+  .msg.me{align-self:flex-end;background:var(--peri);color:var(--on-light);border-bottom-right-radius:4px}
+  .msg.bot{align-self:flex-start;background:rgba(163,184,226,.14);color:var(--ink);border-bottom-left-radius:4px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 8px}
+  .chips button{background:transparent;border:1px solid var(--line);color:var(--ink-3);border-radius:999px;font-size:11.5px;padding:4px 10px}
+  .chips button:hover{color:var(--gold);border-color:var(--gold)}
+  .chatrow{display:flex;gap:8px;padding:0 14px 14px}
+  .chatrow input{flex:1;background:rgba(10,17,34,.7);border:1px solid var(--line);border-radius:999px;
+    color:var(--ink);font:400 13.5px var(--sans);padding:9px 14px;outline:none}
+  .chatrow input:focus{border-color:var(--gold)}
+  .chatrow button{width:38px;height:38px;border-radius:50%;background:var(--gold);border:0;color:var(--on-light);font-weight:800}
 
   /* ---------- layout ---------- */
   main{position:relative;z-index:2}
@@ -81,13 +101,11 @@
   .reveal{opacity:0;transform:translateY(44px);transition:opacity .9s ease,transform .9s cubic-bezier(.16,1,.3,1)}
   .reveal.in{opacity:1;transform:none}
   .reveal.d1{transition-delay:.12s}.reveal.d2{transition-delay:.24s}.reveal.d3{transition-delay:.36s}
-
   .backdrop{position:absolute;inset:0;overflow:hidden;z-index:-1}
   .backdrop img{width:100%;height:100%;object-fit:cover;opacity:.14;filter:saturate(.85)}
   .backdrop::after{content:'';position:absolute;inset:0;
     background:linear-gradient(180deg,var(--ground) 0%,rgba(10,17,34,.35) 40%,rgba(10,17,34,.55) 70%,var(--ground) 100%)}
 
-  /* ---------- hero ---------- */
   #hero{min-height:100vh;text-align:center;align-items:center}
   #hero .display{font-size:clamp(3rem,7vw,5.6rem)}
   #hero .lede{margin:0 auto 34px}
@@ -105,8 +123,10 @@
   .scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:var(--ink-3);font-size:12px;
     letter-spacing:.3em;text-transform:uppercase;animation:cue 2.4s ease-in-out infinite}
   @keyframes cue{0%,100%{transform:translate(-50%,0);opacity:.7}50%{transform:translate(-50%,8px);opacity:1}}
+  .maptag{position:absolute;top:96px;right:6vw;z-index:3;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:rgba(10,17,34,.5)}
+  .maptag b{color:var(--gold)}
 
-  /* ---------- phones ---------- */
   .stage{perspective:1600px}
   .phone{width:min(250px,62vw);border-radius:36px;padding:9px;background:linear-gradient(160deg,#3A4A70,#131D36 60%);
     border:1px solid rgba(210,221,244,.3);box-shadow:0 40px 90px rgba(3,6,14,.65),inset 0 1px 0 rgba(255,255,255,.22);
@@ -119,18 +139,15 @@
   .phone .sheen::after{content:'';position:absolute;top:-60%;left:-80%;width:70%;height:220%;transform:rotate(24deg);
     background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)}
   .float{animation:float 7s ease-in-out infinite}
-  @keyframes float{0%,100%{transform:translateY(0) rotateY(var(--ry,0)) rotateX(var(--rx,0))}
-    50%{transform:translateY(-16px) rotateY(var(--ry,0)) rotateX(var(--rx,0))}}
+  @keyframes float{0%,100%{transform:translateY(0) rotateY(var(--ry,0))}50%{transform:translateY(-16px) rotateY(var(--ry,0))}}
   .fan{display:flex;justify-content:center;align-items:center;gap:clamp(-70px,-4vw,-40px)}
   .fan .phone{--ry:-16deg;transform:rotateY(var(--ry))}
   .fan .phone:nth-child(2){--ry:0deg;z-index:2;width:min(280px,66vw)}
   .fan .phone:nth-child(3){--ry:16deg}
   @media(max-width:900px){.fan{flex-wrap:wrap;gap:22px}.fan .phone{--ry:0deg}}
-
   .split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,80px);align-items:center}
   @media(max-width:940px){.split{grid-template-columns:1fr}}
 
-  /* ---------- feature grids ---------- */
   .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:36px}
   .fcard{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:18px;backdrop-filter:blur(12px);
     transition:.35s;position:relative;overflow:hidden}
@@ -142,7 +159,6 @@
     font-size:11.5px;font-weight:700;letter-spacing:.08em;padding:3px 10px;margin-top:10px}
   .chip.gold{background:rgba(237,201,139,.16);color:var(--gold)}
 
-  /* ---------- gap story ---------- */
   .gapgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:44px}
   .gapcol{border-radius:24px;padding:26px;border:1px solid var(--line)}
   .gapcol.was{background:rgba(15,24,48,.6)}
@@ -155,7 +171,6 @@
   .gapcol.gap li::before{content:'✕';color:var(--rose);font-size:11px;top:11px}
   .gapcol.now li::before{content:'✓';color:var(--mint);font-size:12px;top:10px}
 
-  /* ---------- pipeline ---------- */
   .pipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;margin-top:44px;counter-reset:step}
   .pstep{position:relative;padding:22px 18px 22px 22px;border-left:1px dashed rgba(210,221,244,.25)}
   .pstep::before{counter-increment:step;content:counter(step,decimal-leading-zero);
@@ -164,7 +179,6 @@
   .pstep p{font-size:13.5px;color:var(--ink-3);line-height:1.5}
   .pstep .tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--peri);opacity:.8}
 
-  /* ---------- QR / dine ---------- */
   .qrcard{background:linear-gradient(160deg,#F4F7FD,#DCE5F5);border-radius:26px;padding:24px;color:var(--on-light);
     display:flex;gap:22px;align-items:center;box-shadow:0 30px 70px rgba(3,6,14,.5);max-width:430px}
   .qrcard #dineqr{background:#fff;padding:10px;border-radius:14px;flex:0 0 auto}
@@ -172,7 +186,6 @@
   .qrcard p{font-size:13.5px;line-height:1.5;color:#4A5878}
   .qrcard .code{font:800 20px var(--sans);letter-spacing:.3em;color:var(--on-light);margin-top:6px}
 
-  /* ---------- embeds ---------- */
   .embed-console{width:100%;aspect-ratio:16/9.4;border:1px solid var(--line-2);border-radius:22px;overflow:hidden;
     box-shadow:0 40px 90px rgba(3,6,14,.6);background:var(--ground-2)}
   .embed-console iframe{width:100%;height:100%;border:0}
@@ -210,18 +223,28 @@
 
 <nav class="rail" id="rail"></nav>
 
-<!-- Laila — digital concierge -->
+<!-- Laila — digital concierge, presenter + chatbot -->
 <div id="laila">
-  <div class="orb"><div class="ring"></div><img src="assets/concierge.png" alt="Laila, your KAFD digital concierge" /></div>
-  <div class="bubble">
-    <div class="who">Laila · KAFD Concierge
-      <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
-    </div>
-    <div id="caption">Marhaba! I'm Laila. Shall I walk you through the district?</div>
-    <div class="lctrl">
-      <button class="primary" id="btnTour">▶ Guided tour</button>
-      <button id="btnSay">Narrate this section</button>
-      <button id="btnStop">■</button>
+  <div class="stagebox">
+    <video id="lailaVideo" playsinline preload="none" poster="assets/concierge.png" style="display:none"></video>
+    <img class="still" id="lailaStill" src="assets/concierge.png" alt="Laila, your KAFD digital concierge" />
+    <div class="halo"></div>
+    <div class="nameplate">Laila · Concierge <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
+    <button class="mini" id="btnMin" title="Minimise">−</button>
+  </div>
+  <div id="caption">Marhaba! I'm Laila. Start the tour, or ask me anything — even the compliance questions.</div>
+  <div class="lctrl">
+    <button class="primary" id="btnTour">▶ Guided tour</button>
+    <button id="btnSay">This section</button>
+    <button id="btnChat">💬 Ask Laila</button>
+    <button id="btnStop">■</button>
+  </div>
+  <div id="chat">
+    <div id="chatlog"></div>
+    <div class="chips" id="chatChips"></div>
+    <div class="chatrow">
+      <input id="chatIn" placeholder="Ask about compliance, security, KAFD…" aria-label="Ask Laila a question" />
+      <button id="chatSend" aria-label="Send">➤</button>
     </div>
   </div>
 </div>
@@ -229,14 +252,15 @@
 <main>
 
 <!-- 0 · HERO -->
-<section class="ch" id="hero" data-title="Welcome"
-  data-say="Marhaba, and welcome to KAFD ONE — the King Abdullah Financial District, folded into your pocket. Scroll with me: I will show you how one app now moves you, houses you, feeds you and signs for you. Let us begin with Rafiq.">
+<section class="ch" id="hero" data-title="Welcome" data-clip="0"
+  data-say="Marhaba, and welcome to KAFD ONE — the King Abdullah Financial District, folded into your pocket. Behind me is the district itself: every real building footprint, drawn live. Walk with me — one app now moves, houses, feeds and signs for this entire district.">
+  <div class="maptag">Live digital twin · <b>147 real buildings</b> · OpenStreetMap</div>
   <div class="wrap">
     <p class="eyebrow reveal">The King Abdullah Financial District <span class="ar">مركز الملك عبدالله المالي</span></p>
     <h1 class="display reveal d1">One district.<br/><em>One app.</em></h1>
     <p class="lede reveal d2" style="text-align:center">
       Rides that know the traffic. Homes that sign themselves. Dinner, delivered or reserved.
-      A national identity woven through it all — narrated for you by Laila, your digital concierge.
+      A national identity woven through it all — told to you, face to face, by Laila.
     </p>
     <div class="cta-row reveal d3" style="margin-top:36px">
       <button class="cta gold" id="ctaTour">Start the guided tour</button>
@@ -254,8 +278,8 @@
 </section>
 
 <!-- 1 · THE GAP -->
-<section class="ch" id="story" data-title="The story"
-  data-say="Every great district starts with a directory: places to see, events to attend. But a directory cannot hail a car, lease an apartment, or deliver lunch to the twelfth floor. Those were the gaps. KAFD ONE closes every one of them — five pillars on a single loyalty spine, in Arabic and English.">
+<section class="ch" id="story" data-title="The story" data-clip="1"
+  data-say="Every great district starts with a directory. But a directory cannot hail a car, lease an apartment, or deliver lunch to the twelfth floor. Those were the gaps. KAFD ONE closes every one of them — five pillars on a single loyalty spine, in Arabic and English.">
   <div class="backdrop"><img src="https://opti.kafd.sa/globalassets/images/hero-banner/accelerate-overview-headerbb16.jpg" alt="" loading="lazy"/></div>
   <div class="wrap">
     <p class="eyebrow reveal">Chapter 01 · Why ONE</p>
@@ -278,8 +302,8 @@
 </section>
 
 <!-- 2 · RAFIQ -->
-<section class="ch" id="rafiq" data-title="Rafiq"
-  data-say="This is Rafiq — your companion on wheels. A real map of Riyadh, drive times that respect the evening crawl on King Fahd Road, and A.I. suggestions that learn your rhythm. Flat seven-riyal fares inside the district, five ride classes, a ladies fleet, car-pool seats that cut carbon, reservations three days ahead, work profiles with monthly expense reports — and a live car you can watch glide to your gate.">
+<section class="ch" id="rafiq" data-title="Rafiq" data-clip="2"
+  data-say="This is Rafiq — your companion on wheels. A real map of Riyadh, drive times that respect the evening crawl, A.I. suggestions that learn your rhythm, flat seven-riyal fares inside the district, and a live car you can watch glide to your gate.">
   <div class="wrap split">
     <div>
       <p class="eyebrow reveal">Chapter 02 · Mobility <span class="ar">رفيق</span></p>
@@ -308,14 +332,13 @@
 </section>
 
 <!-- 3 · LIVING+ -->
-<section class="ch" id="living" data-title="Living+"
-  data-say="Living plus is property, end to end. It begins in the operations console, where the leasing office onboards a new apartment or office: unit, pricing, photos. Seconds later it is live in the app — with an A.I. walk-through, twelve months of price history, neighbourhood scores, similar homes and a leasing chat. You tour it, you check the move-in math, and with Nafath you sign the lease digitally. Then the same app collects your rent, fixes your air conditioning, and lets your guests in.">
+<section class="ch" id="living" data-title="Living+" data-clip="3"
+  data-say="Living plus is property, end to end. The leasing office onboards an apartment or office in the operations console; seconds later it is live in the app with price history, neighbourhood scores and a leasing chat. You tour it, Nafath signs it, and the same app then collects your rent and fixes your air conditioning.">
   <div class="backdrop"><img src="https://opti.kafd.sa/globalassets/images/cards/tab-cards/live/live-overview3-latest.jpg" alt="" loading="lazy"/></div>
   <div class="wrap">
     <p class="eyebrow reveal">Chapter 03 · Property <span class="ar">السكن</span></p>
     <h2 class="display reveal d1">A lease that flows<br/>from <em>console to keys</em></h2>
     <p class="lede reveal d2">One pipeline: the admin onboards it, the app sells it, Nafath signs it, the portal runs it.</p>
-
     <div class="pipe reveal d2">
       <div class="pstep"><span class="tag">Ops console</span><h3>Onboard the unit</h3><p>Leasing adds the apartment or office — floors, views, rent, photos — in the KAFD command centre.</p></div>
       <div class="pstep"><span class="tag">App</span><h3>Published instantly</h3><p>It appears in Living+ with filters, saved searches and an AI walkthrough tour.</p></div>
@@ -324,7 +347,6 @@
       <div class="pstep"><span class="tag">Nafath</span><h3>e-Sign the lease</h3><p>Identity-verified digital signing — no branch, no paper. Deposit and quarterly invoices generated.</p></div>
       <div class="pstep"><span class="tag">Portal</span><h3>Live like a resident</h3><p>Pay rent (autopay if you like), triaged maintenance, amenity slots, visitor QR passes.</p></div>
     </div>
-
     <div class="stage" style="margin-top:54px">
       <div class="fan">
         <div class="phone float"><div class="scr"><img src="assets/shots/living-insights.png" alt="Market insights with price trends" loading="lazy"/></div><div class="sheen"></div></div>
@@ -336,8 +358,8 @@
 </section>
 
 <!-- 4 · GO -->
-<section class="ch" id="go" data-title="Go"
-  data-say="KAFD Go is the district's own delivery fleet. Coffee, lunch, pharmacy, gifts — from tower merchants to your desk in about fifteen minutes, verified with a PIN at handover. Skip the fee entirely with pickup, watch your courier live, and earn loyalty points on every riyal.">
+<section class="ch" id="go" data-title="Go" data-clip="4"
+  data-say="KAFD Go is the district's own delivery fleet. Coffee, lunch, pharmacy, gifts — from tower merchants to your desk in about fifteen minutes, verified with a PIN at handover. Skip the fee entirely with pickup.">
   <div class="wrap split">
     <div class="stage reveal">
       <div class="fan">
@@ -359,8 +381,8 @@
 </section>
 
 <!-- 5 · DINE -->
-<section class="ch" id="dine" data-title="Dine"
-  data-say="Dining at KAFD is theatre — so booking it should take seconds. Pick a venue, pick a time, and your table is held with a QR code. At the host stand, one scan seats you. Deposits protect chef's-table nights, the waitlist frees tables in real time, and every cover earns rewards.">
+<section class="ch" id="dine" data-title="Dine" data-clip="5"
+  data-say="Dining at KAFD is theatre — so booking it takes seconds. Your table is held with a QR code; one scan at the host stand seats you. Deposits protect chef's-table nights, and the waitlist frees tables in real time.">
   <div class="backdrop"><img src="https://opti.kafd.sa/globalassets/images/cards/tab-cards/live/live-overview.png" alt="" loading="lazy"/></div>
   <div class="wrap split">
     <div>
@@ -391,8 +413,8 @@
 </section>
 
 <!-- 6 · NAFATH & PLATFORM -->
-<section class="ch" id="nafath" data-title="Identity"
-  data-say="Underneath it all runs one identity. Verify once with Nafath — the Kingdom's national digital ID. Tap the matching number, and a green badge follows you everywhere: leases sign digitally, work profiles approve instantly, visitor passes reach your guests' phones. Around it, one loyalty spine: every riyal on rides, dinners and deliveries earns points toward Silver, Gold and Platinum.">
+<section class="ch" id="nafath" data-title="Identity" data-clip="6"
+  data-say="Underneath it all runs one identity. Verify once with Nafath — tap the matching number, and a green badge follows you everywhere. Leases sign digitally, work profiles approve instantly, visitor passes reach your guests' phones. And every riyal you spend earns loyalty points across all five pillars.">
   <div class="wrap split">
     <div class="stage reveal">
       <div class="fan">
@@ -417,8 +439,8 @@
 </section>
 
 <!-- 7 · COMMAND CENTER -->
-<section class="ch" id="console" data-title="Operations"
-  data-say="And for the district team: the KAFD command centre. Nine live dashboards — ride economics with revenue per trip and the flat-fare subsidy, CO-two leaderboards, dining pacing heatmaps, rent collection, an audit trail of every override. This is the same console where new apartments are onboarded. It is live below — click in and explore.">
+<section class="ch" id="console" data-title="Operations" data-clip="7"
+  data-say="And for the district team: the KAFD command centre. Nine live dashboards — ride economics, rent collection, dining pacing, and an audit trail of every override. This is the same console where new apartments are onboarded. It is live below.">
   <div class="backdrop"><img src="https://opti.kafd.sa/globalassets/images/cards/slides/pif-image-website-011958.jpg" alt="" loading="lazy"/></div>
   <div class="wrap">
     <p class="eyebrow reveal">Chapter 07 · Operations</p>
@@ -431,8 +453,8 @@
 </section>
 
 <!-- 8 · EXPLORE -->
-<section class="ch" id="explore" data-title="Try it"
-  data-say="Now it is your turn. This is not a mock-up — the phone below runs the actual KAFD ONE app. Book a ride to the Boulevard, tour an apartment, verify with Nafath. The district is yours. Shukran for walking with me.">
+<section class="ch" id="explore" data-title="Try it" data-clip="8"
+  data-say="Now it is your turn. This is not a mock-up — the phone below runs the actual KAFD ONE app. Book a ride to the Boulevard, tour an apartment, verify with Nafath. Shukran for walking with me.">
   <div class="wrap" style="text-align:center">
     <p class="eyebrow reveal">Finale · Hands on</p>
     <h2 class="display reveal d1">Don't watch it.<br/><em>Drive it.</em></h2>
@@ -454,105 +476,117 @@
     <a href="app/" target="_blank" rel="noopener">Live app</a>
     <a href="https://kafd-ops-console-820551327432.me-central1.run.app" target="_blank" rel="noopener">Ops console</a>
     <a href="https://github.com/ajith4uuu/kafd-superapp" target="_blank" rel="noopener">Mobile source</a>
-    <a href="https://github.com/ajith4uuu/kafd-ops-console" target="_blank" rel="noopener">Console source</a>
+    <a href="https://github.com/ajith4uuu/kafd-one-landing" target="_blank" rel="noopener">This page's source</a>
   </div>
-  <div>A concept experience built on the KAFD design language · District imagery © KAFD · Maps © OpenStreetMap contributors, © CARTO · Not an official KAFD product</div>
+  <div>A concept experience built on the KAFD design language · District imagery © KAFD · Building data © OpenStreetMap contributors · Maps © CARTO · Not an official KAFD product</div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="assets/kafd-district.js"></script>
 <script>
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- Three.js golden district ---------- */
-  if (window.THREE && !reduced) {
+  /* ================= 3D digital twin of KAFD ================= */
+  if (window.THREE && window.KAFD_DISTRICT && !reduced) {
     const canvas = document.getElementById('bg3d');
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x0a1122, 0.016);
-    const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 400);
-    camera.position.set(0, 10, 46);
+    scene.fog = new THREE.FogExp2(0x0a1122, 0.00135);
+    const camera = new THREE.PerspectiveCamera(52, 1, 1, 5000);
 
-    // Stylised tower field: columns of glowing points on a crescent.
-    const pts = [], cols = [];
-    const gold = new THREE.Color(0xEDC98B), peri = new THREE.Color(0xCBD5EC), deep = new THREE.Color(0x5F76AB);
-    const rnd = (a, b) => a + Math.random() * (b - a);
-    for (let t = 0; t < 60; t++) {
-      const ang = rnd(-1.25, 1.25), rad = rnd(16, 40);
-      const bx = Math.sin(ang) * rad, bz = -Math.cos(ang) * rad * 0.62;
-      const h = rnd(6, 15 + 16 * Math.max(0, 1 - Math.abs(ang))), w = rnd(0.8, 2.2);
-      const n = Math.floor(h * 14);
-      for (let i = 0; i < n; i++) {
-        pts.push(bx + rnd(-w, w), rnd(0, h), bz + rnd(-w, w));
-        const c = Math.random() < 0.24 ? gold : (Math.random() < 0.5 ? peri : deep);
-        cols.push(c.r, c.g, c.b);
-      }
-    }
-    for (let i = 0; i < 900; i++) { // high stars
-      pts.push(rnd(-70, 70), rnd(18, 60), rnd(-60, 10));
-      cols.push(deep.r, deep.g, deep.b);
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
-    geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
-    const mat = new THREE.PointsMaterial({ size: 0.16, vertexColors: true, transparent: true, opacity: 0.85, depthWrite: false });
-    const cloud = new THREE.Points(geo, mat);
-    scene.add(cloud);
-    const mirror = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.16, vertexColors: true, transparent: true, opacity: 0.10, depthWrite: false }));
-    mirror.scale.y = -1; mirror.position.y = -0.5; scene.add(mirror);
+    scene.add(new THREE.AmbientLight(0x2a3a60, 1.4));
+    const key = new THREE.DirectionalLight(0xedc98b, 1.5); key.position.set(-300, 500, 200); scene.add(key);
+    const rim = new THREE.DirectionalLight(0x5f76ab, 1.0); rim.position.set(400, 300, -300); scene.add(rim);
 
-    let mx = 0, my = 0, scrollY = 0;
-    addEventListener('pointermove', e => { mx = (e.clientX / innerWidth - 0.5); my = (e.clientY / innerHeight - 0.5); }, { passive: true });
-    addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+    // Ground disc
+    const ground = new THREE.Mesh(
+      new THREE.CircleGeometry(1600, 64),
+      new THREE.MeshBasicMaterial({ color: 0x0c1428 })
+    );
+    ground.rotation.x = -Math.PI / 2; ground.position.y = -0.5; scene.add(ground);
+
+    // Real KAFD footprints, extruded. Tall towers get glowing gold edges.
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x18233f, roughness: 0.32, metalness: 0.72, flatShading: true });
+    const goldMat = new THREE.MeshStandardMaterial({ color: 0x2a2a1e, roughness: 0.25, metalness: 0.9, emissive: 0x8a6a2a, emissiveIntensity: 0.24 });
+    const edgeGold = new THREE.LineBasicMaterial({ color: 0xedc98b, transparent: true, opacity: 0.8 });
+    const edgeBlue = new THREE.LineBasicMaterial({ color: 0x8fa3cd, transparent: true, opacity: 0.28 });
+    const city = new THREE.Group();
+    for (const b of KAFD_DISTRICT.buildings) {
+      const shape = new THREE.Shape(b.p.map(pt => new THREE.Vector2(pt[0], pt[1])));
+      const geo = new THREE.ExtrudeGeometry(shape, { depth: b.h, bevelEnabled: false });
+      geo.rotateX(-Math.PI / 2);
+      const tall = b.h > 60;
+      const mesh = new THREE.Mesh(geo, tall ? goldMat : bodyMat);
+      city.add(mesh);
+      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 18), tall ? edgeGold : edgeBlue);
+      city.add(edges);
+    }
+    scene.add(city);
+
+    // Ambient dust / stars above the district
+    const starPts = [], starN = 700, rnd = (a, c) => a + Math.random() * (c - a);
+    for (let i = 0; i < starN; i++) starPts.push(rnd(-1200, 1200), rnd(180, 700), rnd(-1200, 1200));
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPts, 3));
+    scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0x8fa3cd, size: 2.2, transparent: true, opacity: 0.5, sizeAttenuation: true })));
+
+    let mx = 0, my = 0, scr = 0;
+    addEventListener('pointermove', e => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
+    addEventListener('scroll', () => { scr = scrollY / Math.max(1, document.body.scrollHeight - innerHeight); }, { passive: true });
     const resize = () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); };
     addEventListener('resize', resize); resize();
+
     renderer.setAnimationLoop((t) => {
-      cloud.rotation.y = mirror.rotation.y = t * 0.000045 + mx * 0.14;
-      camera.position.y = 10 - Math.min(scrollY / innerHeight, 4) * 1.6 + my * -1.2;
-      camera.lookAt(0, 7, 0);
+      // Slow orbit that descends from high aerial to street-ish as you scroll.
+      const ang = t * 0.000038 + mx * 0.35 + scr * 2.2;
+      const radius = 620 - scr * 260;
+      const height = 420 - scr * 250 + my * -30;
+      camera.position.set(Math.sin(ang) * radius, Math.max(90, height), Math.cos(ang) * radius);
+      camera.lookAt(0, 60, 0);
       renderer.render(scene, camera);
     });
   }
 
-  /* ---------- reveals + rail ---------- */
+  /* ================= reveals + rail ================= */
   const chapters = [...document.querySelectorAll('section.ch')];
   const rail = document.getElementById('rail');
-  chapters.forEach((s, i) => {
-    const a = document.createElement('a');
-    a.href = `#${s.id}`; a.title = s.dataset.title || s.id; rail.appendChild(a);
-  });
+  chapters.forEach(s => { const a = document.createElement('a'); a.href = `#${s.id}`; a.title = s.dataset.title; rail.appendChild(a); });
   const dots = [...rail.children];
   let current = chapters[0];
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) e.target.classList.add('in');
-  }), { threshold: 0.16 });
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.16 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   const chIo = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) {
       current = e.target;
       dots.forEach((d, i) => d.classList.toggle('on', chapters[i] === e.target));
-      if (touring) speakChapter(e.target);
+      if (touring) present(e.target);
     }
   }), { threshold: 0.55 });
   chapters.forEach(s => chIo.observe(s));
 
-  /* ---------- lazy embeds ---------- */
   document.querySelectorAll('.loadbtn').forEach(btn => btn.addEventListener('click', () => {
     const f = document.createElement('iframe');
     f.src = btn.dataset.src; f.loading = 'lazy'; f.title = 'Live embed';
     btn.replaceWith(f);
   }));
 
-  /* ---------- demo reservation QR ---------- */
   if (window.QRCode) new QRCode(document.getElementById('dineqr'),
     { text: 'KAFDONE-DINE-DEMO-KFD8Q2', width: 108, height: 108, colorDark: '#2A3757', colorLight: '#ffffff' });
 
-  /* ---------- Laila: narration ---------- */
+  /* ================= Laila: lipsync clips + TTS fallback ================= */
   const laila = document.getElementById('laila');
+  const vid = document.getElementById('lailaVideo');
+  const still = document.getElementById('lailaStill');
   const cap = document.getElementById('caption');
-  let touring = false, spoken = new WeakSet(), voice = null, typeTimer = null;
+  let touring = false, presented = new WeakSet(), voice = null, typeTimer = null;
+  const CLIPS = {}; // index -> 'assets/laila/chN.mp4' if present
+  fetch('assets/laila/manifest.json').then(r => r.ok ? r.json() : []).then(list => {
+    (list || []).forEach(n => { CLIPS[n] = `assets/laila/ch${n}.mp4`; });
+  }).catch(() => {});
+
   const pickVoice = () => {
     const vs = speechSynthesis.getVoices();
     voice = vs.find(v => /en-GB/i.test(v.lang) && /female|libby|sonia|aria|jenny/i.test(v.name))
@@ -562,15 +596,12 @@
   if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
 
   function typeCaption(text) {
-    clearInterval(typeTimer);
-    let i = 0; cap.textContent = '';
-    typeTimer = setInterval(() => {
-      cap.textContent = text.slice(0, i += 3);
-      if (i >= text.length) clearInterval(typeTimer);
-    }, 24);
+    clearInterval(typeTimer); let i = 0; cap.textContent = '';
+    typeTimer = setInterval(() => { cap.textContent = text.slice(0, i += 3); if (i >= text.length) clearInterval(typeTimer); }, 24);
   }
+  function showStill() { vid.pause(); vid.style.display = 'none'; still.style.display = ''; laila.classList.remove('speaking'); }
 
-  function speak(text, onend) {
+  function speakTTS(text, onend) {
     typeCaption(text);
     if (!('speechSynthesis' in window)) { onend && setTimeout(onend, 4000); return; }
     speechSynthesis.cancel();
@@ -583,28 +614,144 @@
     speechSynthesis.speak(u);
   }
 
-  function speakChapter(section, force) {
-    const text = section.dataset.say;
-    if (!text || (!force && spoken.has(section))) return;
-    spoken.add(section);
-    speak(text, () => {
-      if (!touring) return;
-      const next = chapters[chapters.indexOf(section) + 1];
-      if (next) setTimeout(() => next.scrollIntoView({ behavior: 'smooth' }), 900);
-      else touring = false;
-    });
+  function playClip(n, captionText, onend) {
+    vid.src = CLIPS[n]; vid.style.display = ''; still.style.display = 'none';
+    typeCaption(captionText);
+    laila.classList.add('speaking');
+    vid.muted = false;
+    const done = () => { showStill(); onend && onend(); };
+    vid.onended = done;
+    vid.onerror = () => { showStill(); speakTTS(captionText, onend); };
+    vid.play().catch(() => { showStill(); speakTTS(captionText, onend); });
   }
 
-  const startTour = () => { touring = true; spoken = new WeakSet(); speakChapter(current, true); };
+  function present(section, force) {
+    const text = section.dataset.say; if (!text) return;
+    if (!force && presented.has(section)) return;
+    presented.add(section);
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    const clip = section.dataset.clip;
+    const next = () => {
+      if (!touring) return;
+      const n = chapters[chapters.indexOf(section) + 1];
+      if (n) setTimeout(() => n.scrollIntoView({ behavior: 'smooth' }), 800);
+      else touring = false;
+    };
+    if (clip != null && CLIPS[clip]) playClip(clip, text, next);
+    else speakTTS(text, next);
+  }
+
+  const startTour = () => { touring = true; presented = new WeakSet(); laila.classList.remove('min'); present(current, true); };
   document.getElementById('btnTour').addEventListener('click', startTour);
   document.getElementById('ctaTour').addEventListener('click', startTour);
-  document.getElementById('btnSay').addEventListener('click', () => { touring = false; speakChapter(current, true); });
+  document.getElementById('btnSay').addEventListener('click', () => { touring = false; present(current, true); });
   document.getElementById('btnStop').addEventListener('click', () => {
-    touring = false;
+    touring = false; showStill();
     if ('speechSynthesis' in window) speechSynthesis.cancel();
-    laila.classList.remove('speaking'); clearInterval(typeTimer);
-    cap.textContent = 'Paused. Tap “Narrate this section” whenever you like.';
+    clearInterval(typeTimer);
+    cap.textContent = 'Paused. Ask me anything below, or restart the tour whenever you like.';
   });
+  document.getElementById('btnMin').addEventListener('click', () => laila.classList.toggle('min'));
+
+  /* ================= Chatbot: compliance, security, KAFD & the app ================= */
+  const KB = [
+    // — Compliance & regulation —
+    { k: ['pdpl', 'data protection', 'privacy law', 'data residency', 'personal data'], a: 'The concept follows Saudi PDPL principles: personal data is scoped per pillar, residency is planned in-Kingdom, and every rider or resident can request a data-subject export — the console even has a one-click PDPL report generator in its audit page.' },
+    { k: ['nafath', 'identity', 'sso', 'iam', 'national id', 'iqama'], a: 'Identity runs on Nafath, the Kingdom’s national digital identity. You enter your 10-digit ID or iqama (1 = citizen, 2 = resident), approve a two-digit challenge in the Nafath app, and a verified badge unlocks lease e-signing, instant work profiles and guest passes. Only a masked ID is ever stored client-side.' },
+    { k: ['ejar', 'lease registration', 'tenancy law', 'rental contract'], a: 'Digital leases follow the national rental framework: a 12-month contract with quarterly invoices, a refundable deposit of one month plus a SAR 500 admin fee, and an Ejar-style network registration fee (SAR 125) itemised in the move-in calculator before you sign.' },
+    { k: ['payment', 'sama', 'mada', 'psp', 'wallet regulation', 'money'], a: 'Payments in this demo are simulated. The production design routes cards and wallet top-ups through a licensed Saudi payment provider under SAMA supervision, with the in-app wallet capped as a stored-value account and a SAR 50 debt ceiling enforced by the engine.' },
+    { k: ['zatca', 'invoice', 'e-invoic', 'tax', 'vat', 'receipt'], a: 'Every completed ride, order and rent payment produces an e-receipt; the production path formats these as ZATCA-compliant e-invoices with QR verification. In the demo you can see itemised fare and fee breakdowns on each receipt.' },
+    { k: ['driver vetting', 'driver check', 'who drives', 'istimara', 'captain'], a: 'Rafiq captains are vetted before dispatch: licence and istimara document checks (the console audit log shows each verification), ratings and cancellation-rate thresholds, and a standing review queue — drivers below 85% acceptance or above 5% cancellations are flagged automatically.' },
+    { k: ['ladies', 'female driver', 'women'], a: 'Rafiq Ladies is a dedicated class driven exclusively by vetted female captains — selectable on any route, with availability adding at most a couple of minutes to pickup.' },
+    { k: ['courier', 'delivery access', 'tower access'], a: 'Go couriers carry tower-access badges issued through the console (you can see badge issuance in the audit trail). Handovers are PIN-verified, and desk delivery only operates in towers whose security desks have approved lobby access.' },
+    { k: ['visitor', 'guest pass', 'gate access'], a: 'Residents issue time-boxed visitor passes: a named guest, a date, and a validity window, sealed in a QR code that KAFD gate security scans. Passes expire automatically and can be revoked from the console.' },
+    { k: ['sos', 'emergency', 'panic', 'security number'], a: 'Every live ride carries an SOS control wired to KAFD Security’s 24/7 line, plus trip sharing and driver plate checks. SOS events land in the console incident log with severity and resolution tracking.' },
+    { k: ['audit', 'override', 'accountability', 'log'], a: 'Everything privileged is written to an audit trail: fare-cap changes, no-show fee waivers, courier badges, prompt-version promotions for the AI, PDPL exports. The console’s Audit page filters by pillar, role and free text, and exports CSV.' },
+    { k: ['encrypt', 'security architecture', 'data security', 'secure'], a: 'The concept’s security posture: TLS everywhere (the demo itself is HTTPS on Cloud Run), encrypted storage at rest in production, masked identifiers client-side, role-based access in the console, and no client-held secrets — the demo simulates backends with pure, auditable functions.' },
+    { k: ['role', 'rbac', 'admin access', 'who can'], a: 'Console access is role-scoped: ops admins, merchants, leasing agents, security and system bots each see and do different things — the audit log records the actor and role on every action.' },
+    { k: ['surge', 'price cap', 'fair pricing'], a: 'Surge is capped at 2.0× and applies only to metered city trips at peak hours; KAFD’s subsidised flat fares are never surged. The multiplier is always shown before you request — no surprise pricing.' },
+    { k: ['cancel', 'cancellation fee', 'no-show'], a: 'Cancellation is tiered and published: free within 2 minutes of requesting, SAR 5 once a driver is en route, SAR 10 for a no-show. Scheduled rides cancel free until 60 minutes before pickup. Dine no-shows may forfeit a table deposit at peak times.' },
+    { k: ['deposit', 'refund'], a: 'The residential deposit is one month’s rent plus SAR 500, refundable within 14 days of a clean checkout. Dine deposits apply only to peak-time tables and are credited to your bill when you arrive.' },
+    { k: ['co2', 'carbon', 'sustainab', 'environment'], a: 'Pool rides log 0.12 kg of CO₂ saved per shared kilometre — a conservative published factor. The console tracks the cumulative programme (with tree-equivalents) and a rider leaderboard; it’s a district sustainability metric, not an offset claim.' },
+    { k: ['compliance', 'regulation', 'legal'], w: 0.4, a: 'The demo models the compliance surfaces a real deployment needs: PDPL privacy, Nafath identity, Ejar-style lease registration, SAMA-supervised payments, ZATCA e-invoicing, vetted drivers and couriers, and a complete audit trail. Ask me about any of them by name.' },
+    // — KAFD the place —
+    { k: ['what is kafd', 'about kafd', 'district', 'king abdullah financial'], a: 'KAFD — the King Abdullah Financial District — is Riyadh’s financial hub: a purpose-built district of dozens of towers with its own metro station, a Grand Mosque, skywalk network and the Financial Plaza, developed by KAFD DMC under the Public Investment Fund. The 3D map behind this page is built from its real building footprints.' },
+    { k: ['tower', 'tallest', 'pif building', 'skyline'], a: 'The skyline’s crown is the PIF Tower — the district’s tallest — surrounded by dozens of office and residential towers. In the 3D scene, the tall gold-edged masses are the real footprints with their mapped heights.' },
+    { k: ['metro', 'transport', 'get to kafd'], a: 'KAFD has its own Riyadh Metro station on the network’s spine, and the app adds Rafiq rides, seat-mapped shuttles from Al Nakheel, Olaya and Diriyah, and parking guidance for drivers.' },
+    { k: ['mosque', 'prayer'], a: 'The KAFD Grand Mosque anchors the district’s spiritual life. The app is prayer-time aware — Umm Al-Qura timings with a countdown to the next prayer right on the home screen.' },
+    { k: ['skywalk', 'bridge', 'walk'], a: 'A network of climate-controlled skywalks links the towers, so you can cross much of the district without touching street level — it’s also why Go desk deliveries move so fast.' },
+    { k: ['weather', 'climate'], a: 'Riyadh is hot most of the year — the app shows live district weather on the home screen (via open-meteo) and leans on skywalks, metro and Rafiq to keep you out of the sun.' },
+    // — The superapp —
+    { k: ['pillar', 'what can the app', 'features', 'overview', 'superapp'], a: 'Five pillars: Rafiq (rides, pool, shuttle, scheduling), Living+ (browse → tour → Nafath-signed lease → resident portal), Go (desk delivery), Dine (QR reservations), and the KAFD AI concierge — all on one loyalty spine with events, offers and workspace booking.' },
+    { k: ['rafiq', 'ride', 'taxi', 'car'], a: 'Rafiq: five classes (Pool, Go, Comfort, XL, Ladies), SAR 7 flat fares inside KAFD, real Riyadh maps with a live car, traffic-honest ETAs, AI destination suggestions, reservations up to 3 days ahead, multi-stop routes, saved places, work profiles with monthly reports, promos, a yearly Rewind — and SOS safety on every trip.' },
+    { k: ['living', 'apartment', 'rent', 'property', 'office space', 'lease'], a: 'Living+: real units across three towers with filters and saved searches, AI walkthrough tours, 12-month price trends and neighbourhood scores, similar-home suggestions, leasing chat and Q&A, Nafath-gated e-signing, then rent payments with autopay, triaged maintenance, amenity bookings and visitor passes.' },
+    { k: ['onboard', 'add apartment', 'add unit', 'how do units'], a: 'New apartments and offices are onboarded by the leasing team in the ops console — unit number, floors, views, pricing, photos. The catalog publishes straight to the app’s Living+ browse, and the console then tracks occupancy, rent collection and maintenance SLAs for those same units.' },
+    { k: ['go', 'delivery', 'food to desk', 'order'], a: 'KAFD Go delivers from district merchants — coffee, food, pharmacy, gifts — to your tower desk in ~15 minutes median, PIN-verified. Pickup orders skip the delivery fee entirely, and couriers are tracked live.' },
+    { k: ['dine', 'restaurant', 'reservation', 'table', 'qr'], a: 'Dine: real-time reservations at the district’s venues with party sizing, a QR code that checks you in at the host stand, a live waitlist, and deposits that protect peak tables. Every cover earns loyalty points.' },
+    { k: ['loyalty', 'rewards', 'points', 'tier'], a: 'One spine: 10 points per SAR across every pillar. Silver from day one, Gold at 2,000 lifetime points (1.5× earning), Platinum at 6,000 (2×). 500 points converts to SAR 5 of wallet credit, and tiers unlock offers like happy-hour workspace rates.' },
+    { k: ['ai concierge', 'chatbot in app', 'assistant'], a: 'The in-app KAFD AI concierge parses natural requests — “book a table at eight for four”, “get me home” — and executes them against the same engines, in Arabic or English. I’m its cousin on the web.' },
+    { k: ['language', 'arabic', 'rtl'], a: 'Fully bilingual: every screen ships English and Arabic with proper RTL layout. My tour is in English today; the app itself flips languages with one tap.' },
+    { k: ['test', 'quality', 'engineering', 'stack'], a: 'The demo is engineered like a product: Expo/React Native with TypeScript, pure unit-tested engines per pillar — 397 engine tests on the mobile side plus 84 on the console, all green — deterministic simulated backends, and CI to GitHub Pages and Cloud Run.' },
+    { k: ['console', 'admin', 'dashboard', 'operations'], a: 'The ops console has nine pages: Command Center, Growth & Loyalty, Dine pacing, Rafiq (CO₂ + unit economics: net revenue, SAR/ride, take rate, subsidy), Go, Living+, Bookings, Concierge AI and Audit. It’s embedded in the Operations chapter — or open it full-screen from the footer.' },
+    { k: ['revenue', 'economics', 'take rate', 'subsidy', 'business model'], a: 'Rafiq’s unit economics are modelled openly: a 22% platform take on GMV, a SAR 9 driver floor on flat-fare rides funded by a district subsidy (~SAR 2.5 per flat ride), tips passed through untouched — netting roughly SAR 1.6 revenue per ride in the demo data.' },
+    { k: ['map', '3d', 'background', 'twin', 'buildings behind'], a: 'The scene behind this page is a live digital twin: 147 real KAFD building footprints from OpenStreetMap, extruded to their mapped heights in WebGL, with the tallest towers picked out in gold. It orbits slowly and descends as you scroll.' },
+    { k: ['apk', 'download', 'install', 'android'], a: 'The Android APK ships from the GitHub repository (ajith4uuu/kafd-superapp, artifacts folder) — or just use the live web build in the finale chapter, no install needed.' },
+    { k: ['who are you', 'laila', 'avatar', 'are you real'], a: 'I’m Laila — a generated digital human. My face and lip-synced clips were AI-created for this concept, and my answers come from a curated knowledge base about KAFD and the app. Nothing you ask me leaves this page.' },
+    { k: ['cost', 'price of app', 'free'], a: 'The app concept is free to residents and visitors; you pay only for what you consume — rides, meals, rent. Workspace bookings and premium tables carry their listed prices, always shown before you commit.' },
+  ];
+  const FALLBACK = 'I don’t have that one in my notes yet. Try asking about compliance (PDPL, Nafath, Ejar, ZATCA, SAMA), security (SOS, vetting, audit), the district (towers, metro, skywalks), or any pillar of the app — Rafiq, Living+, Go, Dine, rewards, the console.';
+
+  const chat = document.getElementById('chat');
+  const log = document.getElementById('chatlog');
+  const input = document.getElementById('chatIn');
+  const chipsEl = document.getElementById('chatChips');
+  const SUGGEST = ['How is PDPL handled?', 'How are drivers vetted?', 'What does Nafath unlock?', 'How do new apartments get onboarded?', 'What is the revenue model?', 'Is there an audit trail?'];
+  SUGGEST.forEach(q => { const b = document.createElement('button'); b.textContent = q; b.onclick = () => ask(q); chipsEl.appendChild(b); });
+
+  function addMsg(text, mine) {
+    const d = document.createElement('div');
+    d.className = 'msg ' + (mine ? 'me' : 'bot');
+    d.textContent = text; log.appendChild(d); log.scrollTop = log.scrollHeight;
+    return d;
+  }
+  function answer(q) {
+    const s = q.toLowerCase();
+    const stem = (w) => w.replace(/(ing|ed|es|s)$/, '');
+    const tokens = s.split(/[^a-z0-9؀-ۿ]+/).filter(Boolean).map(stem);
+    const tokenHit = (raw) => {
+      const w = stem(raw);
+      return tokens.some(t => t === w || (t.length >= 4 && w.length >= 4 && (t.startsWith(w) || w.startsWith(t))));
+    };
+    let best = null, bestScore = 0;
+    for (const e of KB) {
+      let score = 0;
+      for (const k of e.k) {
+        if (s.includes(k)) { score += k.length * 2; continue; }
+        const words = k.split(' ');
+        if (words.length && words.every(tokenHit)) score += k.length;
+      }
+      score *= e.w ?? 1;
+      if (score > bestScore) { bestScore = score; best = e; }
+    }
+    return best ? best.a : FALLBACK;
+  }
+  function ask(q) {
+    q = (q || '').trim(); if (!q) return;
+    addMsg(q, true); input.value = '';
+    const a = answer(q);
+    const d = addMsg('…', false);
+    let i = 0; const tt = setInterval(() => { d.textContent = a.slice(0, i += 4); log.scrollTop = log.scrollHeight; if (i >= a.length) clearInterval(tt); }, 14);
+    speakTTS(a);
+  }
+  document.getElementById('btnChat').addEventListener('click', () => {
+    laila.classList.toggle('chatting'); laila.classList.remove('min');
+    if (laila.classList.contains('chatting') && !log.children.length) {
+      addMsg('Ahlan! Ask me anything — compliance, regulations, security, the district, or any corner of the app.', false);
+    }
+    input.focus();
+  });
+  document.getElementById('chatSend').addEventListener('click', () => ask(input.value));
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') ask(input.value); });
 })();
 </script>
 </body>
