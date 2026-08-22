@@ -226,8 +226,8 @@
 <!-- Laila — digital concierge, presenter + chatbot -->
 <div id="laila">
   <div class="stagebox">
-    <video id="lailaVideo" playsinline preload="none" poster="assets/concierge.png" style="display:none"></video>
-    <img class="still" id="lailaStill" src="assets/concierge.png" alt="Laila, your KAFD digital concierge" />
+    <video id="lailaVideo" playsinline preload="none" poster="assets/concierge-front.png" style="display:none"></video>
+    <img class="still" id="lailaStill" src="assets/concierge-front.png" alt="Laila, your KAFD digital concierge" />
     <div class="halo"></div>
     <div class="nameplate">Laila · Concierge <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
     <button class="mini" id="btnMin" title="Minimise">−</button>
@@ -493,26 +493,76 @@
     const canvas = document.getElementById('bg3d');
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.18;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x0a1122, 0.00135);
-    const camera = new THREE.PerspectiveCamera(52, 1, 1, 5000);
+    scene.fog = new THREE.FogExp2(0x0a1122, 0.0011);
+    const camera = new THREE.PerspectiveCamera(52, 1, 1, 8000);
 
-    scene.add(new THREE.AmbientLight(0x2a3a60, 1.4));
-    const key = new THREE.DirectionalLight(0xedc98b, 1.5); key.position.set(-300, 500, 200); scene.add(key);
-    const rim = new THREE.DirectionalLight(0x5f76ab, 1.0); rim.position.set(400, 300, -300); scene.add(rim);
+    // Night-sky gradient: environment reflections (PMREM) + visible dome.
+    const grad = document.createElement('canvas'); grad.width = 4; grad.height = 512;
+    const gctx = grad.getContext('2d');
+    const gr = gctx.createLinearGradient(0, 0, 0, 512);
+    gr.addColorStop(0, '#16224a'); gr.addColorStop(0.5, '#0c1530');
+    gr.addColorStop(0.78, '#251c33'); gr.addColorStop(0.92, '#7a5522'); gr.addColorStop(1, '#d9a45c');
+    gctx.fillStyle = gr; gctx.fillRect(0, 0, 4, 512);
+    const skyTex = new THREE.CanvasTexture(grad);
+    skyTex.colorSpace = THREE.SRGBColorSpace;
+    const envScene = new THREE.Scene();
+    envScene.add(new THREE.Mesh(new THREE.SphereGeometry(50, 16, 16),
+      new THREE.MeshBasicMaterial({ map: skyTex, side: THREE.BackSide })));
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(envScene, 0.05).texture;
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(4200, 32, 24),
+      new THREE.MeshBasicMaterial({ map: skyTex, side: THREE.BackSide, fog: false }));
+    scene.add(dome);
 
-    // Ground disc
+    // Lighting: cool ambient sky + a warm low sun casting real shadows.
+    scene.add(new THREE.HemisphereLight(0x33477a, 0x0a0f1e, 1.05));
+    const sun = new THREE.DirectionalLight(0xffd9a0, 2.4);
+    sun.position.set(-700, 620, 380);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -900, right: 900, top: 900, bottom: -900, near: 10, far: 3000 });
+    sun.shadow.bias = -0.0004;
+    scene.add(sun);
+
+    // Photoreal ground: real satellite imagery stitched onto the plane
+    // (Esri World Imagery, CARTO dark fallback), dimmed to dusk.
+    const Z = 16, LAT = 24.7665, LON = 46.6425, GRID = 6, TP = 256;
+    const n = 2 ** Z, latR = LAT * Math.PI / 180;
+    const cxf = (LON + 180) / 360 * n;
+    const cyf = (1 - Math.log(Math.tan(latR) + 1 / Math.cos(latR)) / Math.PI) / 2 * n;
+    const T = 40075016.686 * Math.cos(latR) / n; // metres per tile
+    const cnv = document.createElement('canvas'); cnv.width = cnv.height = GRID * TP;
+    const g2 = cnv.getContext('2d');
+    g2.fillStyle = '#0d1526'; g2.fillRect(0, 0, cnv.width, cnv.height);
+    const groundTex = new THREE.CanvasTexture(cnv);
+    groundTex.colorSpace = THREE.SRGBColorSpace;
+    groundTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     const ground = new THREE.Mesh(
-      new THREE.CircleGeometry(1600, 64),
-      new THREE.MeshBasicMaterial({ color: 0x0c1428 })
+      new THREE.PlaneGeometry(GRID * T, GRID * T),
+      new THREE.MeshStandardMaterial({ map: groundTex, roughness: 0.95, metalness: 0 })
     );
-    ground.rotation.x = -Math.PI / 2; ground.position.y = -0.5; scene.add(ground);
+    ground.rotation.x = -Math.PI / 2; ground.position.y = -0.4; ground.receiveShadow = true;
+    scene.add(ground);
+    const tx0 = Math.round(cxf) - GRID / 2, ty0 = Math.round(cyf) - GRID / 2;
+    for (let i = 0; i < GRID; i++) for (let j = 0; j < GRID; j++) {
+      const tx = tx0 + i, ty = ty0 + j;
+      const px = (tx - cxf) * TP + cnv.width / 2, py = (ty - cyf) * TP + cnv.height / 2;
+      const img = new Image(); img.crossOrigin = 'anonymous';
+      const draw = () => { g2.filter = 'brightness(0.58) saturate(0.85)'; g2.drawImage(img, px, py, TP, TP); g2.filter = 'none'; groundTex.needsUpdate = true; };
+      img.onload = draw;
+      img.onerror = () => { const fb = new Image(); fb.crossOrigin = 'anonymous'; fb.onload = () => { g2.drawImage(fb, px, py, TP, TP); groundTex.needsUpdate = true; }; fb.src = `https://basemaps.cartocdn.com/dark_all/${Z}/${tx}/${ty}.png`; };
+      img.src = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${Z}/${ty}/${tx}`;
+    }
 
-    // Real KAFD footprints, extruded. Tall towers get glowing gold edges.
-    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x18233f, roughness: 0.32, metalness: 0.72, flatShading: true });
-    const goldMat = new THREE.MeshStandardMaterial({ color: 0x2a2a1e, roughness: 0.25, metalness: 0.9, emissive: 0x8a6a2a, emissiveIntensity: 0.24 });
-    const edgeGold = new THREE.LineBasicMaterial({ color: 0xedc98b, transparent: true, opacity: 0.8 });
-    const edgeBlue = new THREE.LineBasicMaterial({ color: 0x8fa3cd, transparent: true, opacity: 0.28 });
+    // Real KAFD footprints as physical glass; the tall towers wear gold.
+    const bodyMat = new THREE.MeshPhysicalMaterial({ color: 0x2c3c60, metalness: 0.85, roughness: 0.22, envMapIntensity: 1.15, clearcoat: 0.55, clearcoatRoughness: 0.3 });
+    const goldMat = new THREE.MeshPhysicalMaterial({ color: 0x5a4a2a, metalness: 1.0, roughness: 0.17, envMapIntensity: 1.5, emissive: 0x6d4f1c, emissiveIntensity: 0.22 });
+    const edgeGold = new THREE.LineBasicMaterial({ color: 0xedc98b, transparent: true, opacity: 0.5 });
     const city = new THREE.Group();
     for (const b of KAFD_DISTRICT.buildings) {
       const shape = new THREE.Shape(b.p.map(pt => new THREE.Vector2(pt[0], pt[1])));
@@ -520,9 +570,9 @@
       geo.rotateX(-Math.PI / 2);
       const tall = b.h > 60;
       const mesh = new THREE.Mesh(geo, tall ? goldMat : bodyMat);
+      mesh.castShadow = true; mesh.receiveShadow = true;
       city.add(mesh);
-      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 18), tall ? edgeGold : edgeBlue);
-      city.add(edges);
+      if (tall) city.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 18), edgeGold));
     }
     scene.add(city);
 
