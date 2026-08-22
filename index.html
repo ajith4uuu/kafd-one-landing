@@ -50,7 +50,7 @@
   #laila.min{width:120px}
   .stagebox{position:relative;aspect-ratio:9/12;background:#0B1226;overflow:hidden}
   #laila.min .stagebox{aspect-ratio:1/1}
-  .stagebox video,.stagebox img.still{width:100%;height:100%;object-fit:cover;object-position:50% 12%}
+  .stagebox video,.stagebox img.still{width:100%;height:100%;object-fit:cover;object-position:50% 18%}
   .stagebox .halo{position:absolute;inset:0;pointer-events:none;
     box-shadow:inset 0 0 0 1px rgba(237,201,139,.0);transition:.3s}
   #laila.speaking .stagebox .halo{box-shadow:inset 0 0 0 2px rgba(237,201,139,.55),inset 0 -40px 60px rgba(237,201,139,.12)}
@@ -259,8 +259,8 @@
 <!-- Laila — digital concierge, presenter + chatbot -->
 <div id="laila">
   <div class="stagebox">
-    <video id="lailaVideo" playsinline preload="none" poster="assets/concierge-front.png" style="display:none"></video>
-    <img class="still" id="lailaStill" src="assets/concierge-front.png" alt="Laila, your KAFD digital concierge" />
+    <video id="lailaVideo" playsinline preload="none" poster="assets/laila-v2.png" style="display:none"></video>
+    <img class="still" id="lailaStill" src="assets/laila-v2.png" alt="Laila, your KAFD digital concierge" />
     <div class="halo"></div>
     <div class="nameplate">Laila · Concierge <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div>
     <button class="mini" id="btnMin" title="Minimise">−</button>
@@ -664,13 +664,15 @@
   let current = chapters[0];
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: 0.16 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  // A chapter is "current" when it crosses the middle band of the viewport —
+  // ratio thresholds fail on chapters taller than the screen (Rafiq, Living+).
   const chIo = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) {
       current = e.target;
       dots.forEach((d, i) => d.classList.toggle('on', chapters[i] === e.target));
       if (touring) present(e.target);
     }
-  }), { threshold: 0.55 });
+  }), { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
   chapters.forEach(s => chIo.observe(s));
 
   document.querySelectorAll('.loadbtn').forEach(btn => btn.addEventListener('click', () => {
@@ -789,7 +791,12 @@
     const done = () => { showStill(); onend && onend(); };
     vid.onended = done;
     vid.onerror = () => { showStill(); speakTTS(captionText, onend); };
-    vid.play().catch(() => { showStill(); speakTTS(captionText, onend); });
+    vid.play().catch(() => {
+      // Mid-tour chapters start from a programmatic scroll, so the browser
+      // may block sound: keep the lips moving muted and let TTS speak.
+      vid.muted = true;
+      vid.play().then(() => speakTTS(captionText)).catch(() => { showStill(); speakTTS(captionText, onend); });
+    });
   }
 
   function present(section, force) {
