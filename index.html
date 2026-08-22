@@ -591,14 +591,27 @@
     );
     ground.rotation.x = -Math.PI / 2; ground.position.y = -0.4; ground.receiveShadow = true;
     scene.add(ground);
-    const tx0 = Math.round(cxf) - GRID / 2, ty0 = Math.round(cyf) - GRID / 2;
-    for (let i = 0; i < GRID; i++) for (let j = 0; j < GRID; j++) {
+    // Over-tile by one row/column each side of a floored origin so the
+    // canvas is fully painted whatever the fractional centre is.
+    const tx0 = Math.floor(cxf - GRID / 2), ty0 = Math.floor(cyf - GRID / 2);
+    for (let i = 0; i <= GRID; i++) for (let j = 0; j <= GRID; j++) {
       const tx = tx0 + i, ty = ty0 + j;
       const px = (tx - cxf) * TP + cnv.width / 2, py = (ty - cyf) * TP + cnv.height / 2;
+      if (px > cnv.width || py > cnv.height || px + TP < 0 || py + TP < 0) continue;
+      const paint = (im, dim) => {
+        g2.filter = dim ? 'brightness(0.58) saturate(0.85)' : 'brightness(0.5) saturate(0.7)';
+        g2.drawImage(im, px, py, TP, TP);
+        g2.filter = 'none';
+        groundTex.needsUpdate = true;
+      };
       const img = new Image(); img.crossOrigin = 'anonymous';
-      const draw = () => { g2.filter = 'brightness(0.58) saturate(0.85)'; g2.drawImage(img, px, py, TP, TP); g2.filter = 'none'; groundTex.needsUpdate = true; };
-      img.onload = draw;
-      img.onerror = () => { const fb = new Image(); fb.crossOrigin = 'anonymous'; fb.onload = () => { g2.drawImage(fb, px, py, TP, TP); groundTex.needsUpdate = true; }; fb.src = `https://basemaps.cartocdn.com/dark_all/${Z}/${tx}/${ty}.png`; };
+      img.onload = () => paint(img, true);
+      img.onerror = () => {
+        // Fallback: light CARTO street tiles, dimmed to match — never black.
+        const fb = new Image(); fb.crossOrigin = 'anonymous';
+        fb.onload = () => paint(fb, false);
+        fb.src = `https://basemaps.cartocdn.com/rastertiles/voyager_nolabels/${Z}/${tx}/${ty}.png`;
+      };
       img.src = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${Z}/${ty}/${tx}`;
     }
 
