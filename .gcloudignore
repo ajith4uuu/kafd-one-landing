@@ -1,0 +1,12 @@
+# Keep the Cloud Build upload small: git history alone was 124 MB and the
+# whole payload 209 MB, which made long uploads fragile on flaky networks.
+.git/
+.gitignore
+
+# Superseded presenter stills — the page serves laila-v2.png only.
+assets/concierge.png
+assets/concierge-full.png
+assets/concierge-front.png
+
+*.log
+node_modules/
