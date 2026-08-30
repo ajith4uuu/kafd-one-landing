@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KAFD ONE — App Directory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root { --bg:#1b2334; --card:rgba(136,148,173,.10); --border:rgba(214,226,248,.14); --teal:#14b8b0; --teal-soft:#8adfda; --gold:#dbb038; --text:#f2f5fb; --muted:#8894ad; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:radial-gradient(900px 600px at 85% -10%, rgba(20,184,176,.10), transparent 55%), var(--bg); color:var(--text); font:400 15px/1.6 'Inter',sans-serif; min-height:100vh; padding:48px 6vw 80px; }
+  h1 { font:300 clamp(2rem,5vw,3rem)/1.15 'Jost',sans-serif; letter-spacing:1px; }
+  .sub { color:var(--muted); margin:10px 0 8px; max-width:62ch; }
+  .note { color:var(--teal-soft); font-size:13px; margin-bottom:36px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; }
+  a.app { display:block; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; color:var(--text); text-decoration:none; transition:.2s; }
+  a.app:hover { border-color:var(--teal); transform:translateY(-3px); }
+  .icon { font-size:26px; }
+  .name { font:500 17px 'Jost',sans-serif; letter-spacing:.4px; margin:10px 0 4px; }
+  .desc { color:var(--muted); font-size:13px; }
+  .tag { display:inline-block; margin-top:10px; font-size:10.5px; font-weight:600; letter-spacing:1.4px; text-transform:uppercase; color:var(--teal-soft); }
+  .tag.supply { color:var(--gold); }
+  .back { display:inline-block; margin-bottom:26px; color:var(--teal-soft); text-decoration:none; font-size:13px; letter-spacing:1px; }
+</style>
+</head>
+<body>
+  <a class="back" href="/">← KAFD ONE</a>
+  <h1>The KAFD ONE app family</h1>
+  <p class="sub">Twelve apps, one shared core. Every app below reuses the same identity, payments, notifications and audit spine — a new service plugs into the core, never a new system.</p>
+  <p class="note">Each link opens that app directly — no login wall, role pre-provisioned (demo).</p>
+  <div class="grid">
+    <a class="app" href="/app/?persona=resident"><span class="icon">🏙</span><div class="name">KAFD ONE</div><div class="desc">Resident &amp; guest superapp — every pillar in one place.</div><span class="tag">Demand</span></a>
+    <a class="app" href="/app/?persona=property"><span class="icon">🏢</span><div class="name">Property Listings</div><div class="desc">Browse units with AI walkthrough tours and apply end-to-end.</div><span class="tag">Demand</span></a>
+    <a class="app" href="/app/?persona=rafiq"><span class="icon">🚗</span><div class="name">Rafiq</div><div class="desc">Rides across the district and the city, with live maps.</div><span class="tag">Demand</span></a>
+    <a class="app" href="/app/?persona=carpool"><span class="icon">👥</span><div class="name">Rafiq Carpool</div><div class="desc">Fill empty seats at pure cost share — the original idea.</div><span class="tag">Community</span></a>
+    <a class="app" href="/app/?persona=driver"><span class="icon">🛞</span><div class="name">Rafiq Driver</div><div class="desc">TGA documents, dispatch queue, trips and earnings.</div><span class="tag supply">Supply</span></a>
+    <a class="app" href="/app/?persona=captain"><span class="icon">🛵</span><div class="name">Captain</div><div class="desc">Service-order execution: queue, fulfilment, earnings.</div><span class="tag supply">Execution</span></a>
+    <a class="app" href="/app/?persona=gate"><span class="icon">🛡</span><div class="name">Gate Security</div><div class="desc">Passes, lane verification, blacklist and the entry log.</div><span class="tag supply">Verification</span></a>
+    <a class="app" href="/app/?persona=partner"><span class="icon">🏪</span><div class="name">Partner Hub</div><div class="desc">Vendor onboarding, catalog and weekly settlement.</div><span class="tag supply">Supply</span></a>
+    <a class="app" href="/app/?persona=dine"><span class="icon">🍽</span><div class="name">Dine</div><div class="desc">Live trading hours, reservations and QR check-in.</div><span class="tag">Demand</span></a>
+    <a class="app" href="/app/?persona=go"><span class="icon">📦</span><div class="name">Go Delivery</div><div class="desc">District delivery to your desk, car or door.</div><span class="tag">Demand</span></a>
+    <a class="app" href="/app/?persona=living"><span class="icon">🏠</span><div class="name">Living</div><div class="desc">Resident portal, leases, short stays and services.</div><span class="tag">Demand</span></a>
+    <a class="app" href="/app/?persona=concierge"><span class="icon">✦</span><div class="name">KAFD AI</div><div class="desc">The district concierge — books, quotes and plans.</div><span class="tag">Platform</span></a>
+  </div>
+</body>
+</html>
