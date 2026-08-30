@@ -9,4 +9,4 @@ assets/concierge-full.png
 assets/concierge-front.png
 
 *.log
-node_modules/
+/node_modules/
