@@ -4,6 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>KAFD ONE — The District in Your Pocket</title>
+<link rel="icon" type="image/png" href="kafd-tile.png"/>
+<link rel="apple-touch-icon" href="kafd-tile.png"/>
 <meta name="description" content="A guided 3D tour of the KAFD ONE superapp above a digital twin of the real district — narrated with lipsync by Laila, your digital concierge, with a compliance-aware chatbot." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -510,6 +512,151 @@
     </div>
   </div>
 </section>
+
+<!-- 7b · WALKTHROUGHS -->
+<style>
+  #walks .jrail{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 30px}
+  #walks .jpill{border:1px solid rgba(197,207,228,.28);background:rgba(255,255,255,.04);color:var(--ink,#EAF0FA);
+    padding:9px 16px;border-radius:999px;font:500 13px/1 Inter,system-ui,sans-serif;letter-spacing:.04em;cursor:pointer;
+    transition:all .25s ease}
+  #walks .jpill:hover{border-color:rgba(20,184,176,.7)}
+  #walks .jpill.on{background:#14B8B0;border-color:#14B8B0;color:#0d1526}
+  #walks .jstage{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:26px;align-items:start}
+  #walks .jpresenter{position:relative;border-radius:22px;overflow:hidden;border:1px solid rgba(197,207,228,.22);
+    background:#0d1526;box-shadow:0 18px 50px rgba(5,8,15,.5)}
+  #walks .jpresenter video{display:block;width:100%;aspect-ratio:9/16;object-fit:cover}
+  #walks .jplay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:pointer;
+    background:linear-gradient(180deg,rgba(13,21,38,0) 40%,rgba(13,21,38,.72));transition:opacity .3s}
+  #walks .jplay span{width:74px;height:74px;border-radius:50%;background:#14B8B0;color:#0d1526;display:flex;
+    align-items:center;justify-content:center;font-size:26px;padding-left:5px;box-shadow:0 10px 30px rgba(20,184,176,.4)}
+  #walks .jplay.hide{opacity:0;pointer-events:none}
+  #walks .jfilm{min-width:0}
+  #walks .jframe{border-radius:18px;overflow:hidden;border:1px solid rgba(197,207,228,.2);background:#0d1526;position:relative}
+  #walks .jframe img{display:block;width:100%;max-height:520px;object-fit:contain;background:#0d1526}
+  #walks .jcap{position:absolute;left:0;right:0;bottom:0;padding:14px 18px;font:400 14px/1.45 Inter,sans-serif;
+    color:#EAF0FA;background:linear-gradient(180deg,rgba(13,21,38,0),rgba(13,21,38,.88) 45%)}
+  #walks .jcap b{color:#DBB038;font-weight:600;margin-right:8px;font-variant-numeric:tabular-nums}
+  #walks .jthumbs{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:4px}
+  #walks .jthumbs img{width:74px;height:52px;object-fit:cover;object-position:top;border-radius:8px;cursor:pointer;
+    border:1px solid rgba(197,207,228,.2);opacity:.45;transition:all .25s}
+  #walks .jthumbs img.on{opacity:1;border-color:#14B8B0}
+  @media (max-width:760px){#walks .jstage{grid-template-columns:1fr}#walks .jpresenter{max-width:260px;margin:0 auto}}
+</style>
+<section class="ch" id="walks" data-title="Walkthroughs"
+  data-say="Eight journeys, eight walkthroughs. Pick one — I will present it myself, over screens captured from the running apps. Every screenshot you see here is real evidence from the live build.">
+  <div class="backdrop"><img src="https://opti.kafd.sa/globalassets/images/cards/slides/kafd-website-image011933.jpg" alt="" loading="lazy"/></div>
+  <div class="wrap" style="width:100%">
+    <p class="eyebrow reveal">Chapter 08 · Guided walkthroughs</p>
+    <h2 class="display reveal d1">Every journey,<br/><em>presented</em></h2>
+    <p class="lede reveal d2">Pick a journey. Laila presents it — lip-synced — over real screens captured from the running apps: rider to driver, viewing to Ejar, gate scan to settlement.</p>
+    <div class="jrail reveal d2" id="jrail"></div>
+    <div class="jstage reveal d3">
+      <div class="jpresenter">
+        <video id="jvid" playsinline preload="metadata" poster="assets/laila-v2.png"></video>
+        <div class="jplay" id="jplay"><span>▶</span></div>
+      </div>
+      <div class="jfilm">
+        <div class="jframe">
+          <img id="jimg" src="assets/journeys/j0-1.jpg" alt="Journey frame" />
+          <div class="jcap"><b id="jstep">1/4</b><span id="jcaptext">Live map home — book in two taps</span></div>
+        </div>
+        <div class="jthumbs" id="jthumbs"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(() => {
+  const J = [
+    { id: 'rafiq', t: 'Rafiq · Rider', clip: 'j0', f: [
+      ['j0-1', 'Live map home — book in two taps'],
+      ['j0-2', 'Carpool — fill the empty seats'],
+      ['j0-3', 'Fair split: SAR 1.25 a seat, capped at cost'],
+      ['j0-4', 'Your request reaches nearby drivers']] },
+    { id: 'driver', t: 'Rafiq · Driver', clip: 'j1', f: [
+      ['j1-1', 'All TGA documents green — go online'],
+      ['j1-2', 'Dispatch queue, surge shown up front'],
+      ['j1-3', 'In trip — stage by stage'],
+      ['j1-4', 'Completed: SAR 42.60 — 80% of every fare']] },
+    { id: 'living', t: 'Living · PropTech', clip: 'j2', f: [
+      ['j2-1', 'Listings with AI walkthrough tours'],
+      ['j2-2', 'Viewing booked — the slot locks'],
+      ['j2-3', 'e-Sign with Nafath verification'],
+      ['j2-4', 'Lease registered with Ejar automatically'],
+      ['j2-5', '“Sink leaking” → AI triage picks the plumber']] },
+    { id: 'dine', t: 'Dine', clip: 'j3', f: [
+      ['j3-1', 'Every venue, live'],
+      ['j3-2', 'The trading clock rules the door'],
+      ['j3-3', 'Table confirmed — QR check-in'],
+      ['j3-4', 'The host stand sees the same night']] },
+    { id: 'go', t: 'Go · Delivery', clip: 'j4', f: [
+      ['j4-1', 'District kitchens to desk, car, or door'],
+      ['j4-2', 'Menus with live prep times'],
+      ['j4-3', 'Free over SAR 60 — PIN-sealed handoff']] },
+    { id: 'ops', t: 'Ops Console', clip: 'j5', f: [
+      ['j5-1', 'Fleet: TGA compliance gates activation'],
+      ['j5-2', 'Portfolio: photos become AI walkthroughs'],
+      ['j5-3', 'Finance: maker-checker on every riyal'],
+      ['j5-4', 'RBAC matrix — SoD violations: zero'],
+      ['j5-5', 'Pricing, surge caps, promos, incidents']] },
+    { id: 'estate', t: 'Estate Services', clip: 'j6', f: [
+      ['j6-1', 'Order services from your residence'],
+      ['j6-2', 'A captain is matched in seconds'],
+      ['j6-3', 'Captain completes — earnings logged'],
+      ['j6-4', 'Vendor settles: gross − 15% − VAT']] },
+    { id: 'gate', t: 'Gate Security', clip: 'j7', f: [
+      ['j7-1', 'Guard scans the QR pass'],
+      ['j7-2', 'Allowed — entries counted down'],
+      ['j7-3', 'Blacklist beats everything'],
+      ['j7-4', 'Wrong ID? Refused']] },
+  ];
+  const rail = document.getElementById('jrail');
+  const vid = document.getElementById('jvid');
+  const play = document.getElementById('jplay');
+  const img = document.getElementById('jimg');
+  const step = document.getElementById('jstep');
+  const cap = document.getElementById('jcaptext');
+  const thumbs = document.getElementById('jthumbs');
+  let cur = J[0], idx = 0;
+
+  function setFrame(i, manual) {
+    idx = Math.max(0, Math.min(cur.f.length - 1, i));
+    img.src = `assets/journeys/${cur.f[idx][0]}.jpg`;
+    step.textContent = `${idx + 1}/${cur.f.length}`;
+    cap.textContent = cur.f[idx][1];
+    [...thumbs.children].forEach((t, k) => t.classList.toggle('on', k === idx));
+    if (manual && !vid.paused) vid.pause(), play.classList.remove('hide');
+  }
+  function select(j) {
+    cur = j;
+    [...rail.children].forEach((p) => p.classList.toggle('on', p.dataset.id === j.id));
+    vid.pause(); play.classList.remove('hide');
+    vid.src = `assets/journeys/${j.clip}.mp4`;
+    thumbs.innerHTML = '';
+    j.f.forEach(([src], k) => {
+      const t = document.createElement('img');
+      t.src = `assets/journeys/${src}.jpg`; t.alt = '';
+      t.addEventListener('click', () => setFrame(k, true));
+      thumbs.appendChild(t);
+    });
+    setFrame(0);
+  }
+  J.forEach((j) => {
+    const p = document.createElement('button');
+    p.className = 'jpill'; p.dataset.id = j.id; p.textContent = j.t;
+    p.addEventListener('click', () => select(j));
+    rail.appendChild(p);
+  });
+  play.addEventListener('click', () => { vid.play(); play.classList.add('hide'); });
+  vid.addEventListener('timeupdate', () => {
+    if (!vid.duration) return;
+    const i = Math.min(cur.f.length - 1, Math.floor((vid.currentTime / vid.duration) * cur.f.length));
+    if (i !== idx) setFrame(i);
+  });
+  vid.addEventListener('ended', () => play.classList.remove('hide'));
+  select(J[0]);
+})();
+</script>
 
 <!-- 8 · EXPLORE -->
 <section class="ch" id="explore" data-title="Try it" data-clip="8"
